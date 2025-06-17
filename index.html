@@ -54,12 +54,6 @@
       overflow-y: auto;
     }
     .column h3 {
-      position: sticky;
-      top: 0;
-      background: #fff;
-      z-index: 1;
-      padding: 4px 0;
-      border-bottom: 1px solid #ccc;
       margin-top: 0;
       font-size: 18px;
       text-align: center;
@@ -203,12 +197,31 @@
 
 
 
+<script>
+  function setupSortable() {
+    const limit = 4;
+    ['court1', 'court2', 'court3', 'namePool'].forEach(id => {
+      new Sortable(document.getElementById(id), {
+        group: 'shared',
+        animation: 150,
+        onAdd: function (evt) {
+          const target = evt.to;
+          if (target.id.startsWith("court")) {
+            const tags = Array.from(target.querySelectorAll(".name-tag"));
+            if (tags.length > limit) {
+              evt.from.insertBefore(evt.item, evt.from.children[evt.oldIndex]);
+              alert("각 코트에는 최대 4명까지 배정할 수 있습니다.");
+            }
+          }
+        }
+      });
+    });
+  }
+  window.addEventListener("DOMContentLoaded", setupSortable);
+</script>
 
 
-
-
-
-
+</html>
 
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <script>
@@ -225,29 +238,6 @@
             if (tags.length > limit) {
               evt.from.insertBefore(evt.item, evt.from.children[evt.oldIndex]);
               alert("각 코트에는 최대 4명까지만 배정할 수 있습니다.");
-            } else {
-              const movedTag = evt.item;
-              const tagText = movedTag.innerText;
-              const genderClass = movedTag.classList.contains("male") ? "male" : "female";
-              const levelSplit = tagText.split(" / ");
-              const name = levelSplit[0];
-              const level = levelSplit[1] || "";
-
-              // remove from any other DB list
-              Object.entries(containerMap).forEach(([id, ref]) => {
-                if (id !== evt.to.id) {
-                  onValue(ref, snap => {
-                    snap.forEach(child => {
-                      if (child.val().name.toUpperCase() === name && child.val().level === level) {
-                        remove(child.ref);
-                      }
-                    });
-                  }, { onlyOnce: true });
-                }
-              });
-
-              // push to target DB
-              push(containerMap[evt.to.id], { name, level, gender: genderClass });
             }
           }
         }
@@ -256,15 +246,12 @@
   }
 
   function resetCourt(courtId) {
-    onValue(containerMap[courtId], snapshot => {
-      snapshot.forEach(child => {
-        push(containerMap.namePool, child.val());
-        remove(child.ref);
-      });
-    }, { onlyOnce: true });
+    const court = document.getElementById(courtId);
+    const namePool = document.getElementById("namePool");
+    const tags = Array.from(court.querySelectorAll(".name-tag"));
+    tags.forEach(tag => namePool.appendChild(tag));
   }
 
   window.addEventListener("DOMContentLoaded", setupSortable);
 </script>
 </body>
-</html>
