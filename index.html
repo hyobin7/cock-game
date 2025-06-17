@@ -105,7 +105,8 @@
 
 <h2>실시간 배드민턴 코트 배정</h2>
 
-<textarea id="inputArea" placeholder="예시: kim hyunsoo 3급 남\nlee jiyeon 2급 여"></textarea>
+<textarea id="inputArea" placeholder="예시: 남 김현수 3급
+여 이지연 2급"></textarea>
 <button class="btn" id="generateBtn" onclick="generateTags()">이름표 만들기</button>
 
 <div class="layout">
@@ -124,14 +125,14 @@
   import { getDatabase, ref, onValue, set, push, remove } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
 
   const firebaseConfig = {
-    apiKey: "AIzaSyA-9V5ioC80iBCR9m0QKJgomNHWnnzCQgk",
-    authDomain: "cock-c3c4d.firebaseapp.com",
-    databaseURL: "https://cock-c3c4d-default-rtdb.firebaseio.com",
-    projectId: "cock-c3c4d",
-    storageBucket: "cock-c3c4d.firebasestorage.app",
-    messagingSenderId: "989547598785",
-    appId: "1:989547598785:web:84c6ead79a2f3d7b7a5540",
-    measurementId: "G-29ZCN5J2Y8"
+    apiKey: "AIzaSyBQnSbBwJR-IS1aOuNrJz4qopK3RSiZbGY",
+    authDomain: "cock-5c32d.firebaseapp.com",
+    databaseURL: "https://cock-5c32d-default-rtdb.firebaseio.com",
+    projectId: "cock-5c32d",
+    storageBucket: "cock-5c32d.firebasestorage.app",
+    messagingSenderId: "639370966543",
+    appId: "1:639370966543:web:84bdc6f474a7ba8cbc557a",
+    measurementId: "G-FLZSZVBPHC"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -152,7 +153,7 @@
         const val = child.val();
         const div = document.createElement("div");
         div.className = "name-tag " + val.gender;
-        div.innerText = val.name.toUpperCase();
+        div.innerText = val.name.toUpperCase() + (val.level ? " / " + val.level : "");
         div.onclick = () => remove(child.ref);
         container.appendChild(div);
       });
@@ -167,13 +168,21 @@
     lines.forEach(line => {
       const parts = line.trim().split(" ");
       if (parts.length >= 3) {
-        const name = parts[0] + " " + parts[1];
-        const gender = parts[2] === "여" ? "female" : "male";
-        push(containerMap.namePool, { name, gender });
+        const gender = parts[0] === "여" ? "female" : "male";
+        const name = parts[1] + " " + parts[2];
+        const level = parts.slice(3).join(" ");
+        push(containerMap.namePool, { name, level, gender });
       }
     });
     document.getElementById("inputArea").value = "";
   }
+
+  document.getElementById("inputArea").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      generateTags();
+    }
+  });
 
   window.resetCourt = function (courtId) {
     const courtRef = containerMap[courtId];
