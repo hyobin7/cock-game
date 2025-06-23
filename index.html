@@ -4,6 +4,33 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+    .main-container {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+        gap: 10px;
+    }
+    .courts {
+        flex: 1 1 30%;
+        min-width: 200px;
+    }
+    #namePool {
+        flex: 1 1 30%;
+        min-width: 200px;
+    }
+    #assignmentTable {
+        flex: 1 1 30%;
+        min-width: 200px;
+    }
+    @media (max-width: 768px) {
+        .main-container {
+            flex-direction: column !important;
+        }
+        .court, #namePool, #assignmentTable {
+            width: 100% !important;
+        }
+    }
+    
     @media (max-width: 768px) {
         .main-container {
             flex-direction: column !important;
@@ -17,6 +44,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>배드민턴 코트 배정</title>
   <style>
+    .main-container {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+        gap: 10px;
+    }
+    .courts {
+        flex: 1 1 30%;
+        min-width: 200px;
+    }
+    #namePool {
+        flex: 1 1 30%;
+        min-width: 200px;
+    }
+    #assignmentTable {
+        flex: 1 1 30%;
+        min-width: 200px;
+    }
+    @media (max-width: 768px) {
+        .main-container {
+            flex-direction: column !important;
+        }
+        .court, #namePool, #assignmentTable {
+            width: 100% !important;
+        }
+    }
+    
     body {
       font-family: 'Arial', sans-serif;
       margin: 0;
